@@ -10,7 +10,7 @@ activityCompose = "1.10.1"
 composeBom = "2024.04.01"
 tensorflowLite = "2.17.0"
 tensorflowLiteSupport = "0.5.0"
-camerax = "1.5.0-alpha06"
+camerax = "1.4.2"
 accompanist = "0.37.2"
 
 [libraries]
@@ -39,7 +39,10 @@ androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycl
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax" }
 # Contains the CameraXViewfinder composable
 # https://developer.android.com/jetpack/androidx/releases/camera?hl=ko#1.5.0-alpha06
-androidx-camera-compose = { module = "androidx.camera:camera-compose", version.ref = "camerax" }
+#androidx-camera-compose = { module = "androidx.camera:camera-compose", version.ref = "camerax" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
+androidx-camera-video = { group = "androidx.camera", name = "camera-video", version.ref = "camerax" }
+androidx-camera-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax" }
 # The helper library to grant the camera permission
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 
