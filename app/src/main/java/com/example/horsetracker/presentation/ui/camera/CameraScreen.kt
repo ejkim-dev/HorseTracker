@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.viewinterop.AndroidView
-import com.example.horsetracker.presentation.detector.BoundingBox
+import com.example.aitracker.api.DetectionBox
 import com.example.horsetracker.presentation.ui.camera.uistate.CameraState
 import com.example.horsetracker.presentation.ui.component.BoundingBoxOverlay
 import com.example.horsetracker.presentation.ui.component.RequestPermissions
@@ -27,18 +27,18 @@ import kotlinx.coroutines.launch
 @Composable
 fun AiCameraScreen(
     controller: CameraController,
-    boundingBoxes: List<BoundingBox>
+    detectionBoxes: List<DetectionBox>
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(1f)
+            .aspectRatio(3f / 4f)
             .clipToBounds()
     ) {
         CameraScreen(controller = controller)
 
         BoundingBoxOverlay(
-            boundingBoxes = boundingBoxes,
+            detectionBox = detectionBoxes,
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -100,7 +100,7 @@ fun CameraPermissionCheckSnackbar(
             is CameraState.PermissionGranted -> {
                 AiCameraScreen(
                     controller = viewModel.cameraController,
-                    boundingBoxes = viewModel.boundingBoxes.value
+                    detectionBoxes = viewModel.boundingBoxes.value
                 )
             }
 
