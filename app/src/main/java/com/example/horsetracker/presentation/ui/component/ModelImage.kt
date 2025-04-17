@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.ui.ai
+package com.example.horsetracker.presentation.ui.component
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
