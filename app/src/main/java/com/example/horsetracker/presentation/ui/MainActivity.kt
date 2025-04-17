@@ -1,104 +1,85 @@
 package com.example.horsetracker.presentation.ui
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
-import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import com.example.horsetracker.R
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.horsetracker.presentation.detector.BoundingBox
 import com.example.horsetracker.presentation.detector.Detector
+import com.example.horsetracker.presentation.ui.camera.CameraController
+import com.example.horsetracker.presentation.ui.camera.CameraPermissionCheckSnackbar
+import com.example.horsetracker.presentation.ui.camera.CameraViewModel
+import com.example.horsetracker.presentation.ui.camera.CameraXController
 import com.example.horsetracker.presentation.ui.theme.HorseTrackerTheme
-import com.example.horsetracker.presentation.ui.ai.ModelImage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity(), Detector.DetectorListener  {
-    private var sampleImage by mutableStateOf<Bitmap?>(null)
-    private lateinit var horseDetector: Detector
-    private val processingScope = CoroutineScope(Dispatchers.IO)
+class MainActivity : ComponentActivity(), Detector.DetectorListener,
+    CameraController.CameraFrameProcessor {
+
+    private lateinit var cameraViewModel: CameraViewModel
+    private val horseDetector: Detector by lazy {
+        Detector(
+            baseContext,
+            MODEL_PATH,
+            listOf("horse"),
+            this
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sampleImage = BitmapFactory.decodeResource(resources, R.drawable.sample)
-        horseDetector = Detector(baseContext, MODEL_PATH, listOf("horse"), this).apply {
-            setup()
-        }
-        sampleImage?.let { horseDetector.detect(it) }
+        horseDetector.setup()
 
         setContent {
-            HorseTrackerTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    ModelImage(bitmap = sampleImage)
+            cameraViewModel = viewModel()
+
+            LaunchedEffect(Unit) {
+                cameraViewModel.apply {
+                    initCameraController(
+                        CameraXController(
+                            context = baseContext,
+                            lifecycleOwner = this@MainActivity,
+                            cameraFrameProcessor = this@MainActivity
+                        )
+                    )
+                }
+            }
+
+            HorseTrackerTheme(
+                darkTheme = true,
+            ) {
+                Surface {
+                    CameraPermissionCheckSnackbar(
+                        viewModel = cameraViewModel
+                    )
                 }
             }
         }
     }
 
     override fun onDetect(boundingBoxes: List<BoundingBox>) {
-        sampleImage?.let { bmp ->
-            processingScope.launch {
-                val updatedBitmap = drawBoundingBoxes(bmp, boundingBoxes)
-                sampleImage = updatedBitmap
-            }
-        }
+        cameraViewModel.updateBoundingBoxes(boundingBoxes)
     }
 
     override fun onEmptyDetect() {
-        Log.i(TAG, "empty")
+        cameraViewModel.updateBoundingBoxes(emptyList())
     }
 
     override fun onDetectError(e: Exception) {
-        Log.e(TAG, "${e.message}")
+        cameraViewModel.updateBoundingBoxes(emptyList())
     }
 
-    private fun drawBoundingBoxes(bitmap: Bitmap, boxes: List<BoundingBox>): Bitmap {
-        val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
-        val canvas = Canvas(mutableBitmap)
-        val paint = Paint().apply {
-            color = Color.RED
-            style = Paint.Style.STROKE
-            strokeWidth = 20f
-        }
-        val textPaint = Paint().apply {
-            color = Color.rgb(255,255,255)
-            textSize = 150f
-            typeface = Typeface.DEFAULT_BOLD
-        }
+    override fun processFrame(frame: Bitmap) {
+        horseDetector.detect(frame)
+    }
 
-        for (box in boxes) {
-            val rect = RectF(
-                box.x1 * mutableBitmap.width,
-                box.y1 * mutableBitmap.height,
-                box.x2 * mutableBitmap.width,
-                box.y2 * mutableBitmap.height
-            )
-            canvas.drawRect(rect, paint)
-            canvas.drawText(box.clsName, rect.left, rect.bottom, textPaint)
-        }
-
-        return mutableBitmap
+    override fun onError(exception: Exception) {
+        cameraViewModel.updateBoundingBoxes(emptyList())
     }
 
     companion object {
-        private const val TAG = "MainActivity"
         private const val MODEL_PATH = "best_float32.tflite"
     }
 }
