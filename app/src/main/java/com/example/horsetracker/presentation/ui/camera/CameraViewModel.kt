@@ -3,7 +3,7 @@ package com.example.horsetracker.presentation.ui.camera
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.horsetracker.presentation.detector.BoundingBox
+import com.example.aitracker.api.DetectionBox
 import com.example.horsetracker.presentation.ui.camera.uistate.CameraState
 
 class CameraViewModel: ViewModel() {
@@ -15,8 +15,8 @@ class CameraViewModel: ViewModel() {
         get() = _cameraController ?: throw IllegalStateException("Camera not initialized")
 
 
-    private val _boundingBoxes = mutableStateOf<List<BoundingBox>>(emptyList())
-    val boundingBoxes: State<List<BoundingBox>> = _boundingBoxes
+    private val _boundingBoxes = mutableStateOf<List<DetectionBox>>(emptyList())
+    val boundingBoxes: State<List<DetectionBox>> = _boundingBoxes
 
     override fun onCleared() {
         super.onCleared()
@@ -29,7 +29,7 @@ class CameraViewModel: ViewModel() {
         }
     }
 
-    fun updateBoundingBoxes(newBoxes: List<BoundingBox>) {
+    fun updateBoundingBoxes(newBoxes: List<DetectionBox>) {
         _boundingBoxes.value = newBoxes
     }
 

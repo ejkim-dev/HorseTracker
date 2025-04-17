@@ -7,24 +7,23 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.horsetracker.presentation.detector.BoundingBox
-import com.example.horsetracker.presentation.detector.Detector
+import com.example.aitracker.api.DetectionBox
+import com.example.aitracker.api.Detector
+import com.example.aitracker.api.DetectorFactory
 import com.example.horsetracker.presentation.ui.camera.CameraController
 import com.example.horsetracker.presentation.ui.camera.CameraPermissionCheckSnackbar
 import com.example.horsetracker.presentation.ui.camera.CameraViewModel
 import com.example.horsetracker.presentation.ui.camera.CameraXController
 import com.example.horsetracker.presentation.ui.theme.HorseTrackerTheme
 
-class MainActivity : ComponentActivity(), Detector.DetectorListener,
+class MainActivity : ComponentActivity(), Detector.DetectionListener,
     CameraController.CameraFrameProcessor {
 
     private lateinit var cameraViewModel: CameraViewModel
     private val horseDetector: Detector by lazy {
-        Detector(
-            baseContext,
-            MODEL_PATH,
-            listOf("horse"),
-            this
+        DetectorFactory.createHorseDetector(
+            context = baseContext,
+            listener = this
         )
     }
 
@@ -59,15 +58,15 @@ class MainActivity : ComponentActivity(), Detector.DetectorListener,
         }
     }
 
-    override fun onDetect(boundingBoxes: List<BoundingBox>) {
-        cameraViewModel.updateBoundingBoxes(boundingBoxes)
+    override fun detectionResult(results: List<DetectionBox>) {
+        cameraViewModel.updateBoundingBoxes(results)
     }
 
-    override fun onEmptyDetect() {
+    override fun emptyDetection() {
         cameraViewModel.updateBoundingBoxes(emptyList())
     }
 
-    override fun onDetectError(e: Exception) {
+    override fun detectionError(e: Exception) {
         cameraViewModel.updateBoundingBoxes(emptyList())
     }
 
@@ -77,10 +76,6 @@ class MainActivity : ComponentActivity(), Detector.DetectorListener,
 
     override fun onError(exception: Exception) {
         cameraViewModel.updateBoundingBoxes(emptyList())
-    }
-
-    companion object {
-        private const val MODEL_PATH = "best_float32.tflite"
     }
 }
 

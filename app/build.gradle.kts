@@ -37,14 +37,10 @@ android {
     buildFeatures {
         compose = true
     }
-    androidResources {
-        // 참고: Android Gradle 플러그인 버전 4.1부터 .tflite가 기본적으로 no압축 목록에 추가되며 위의 aaptOptions는 필요하지 않습니다.
-        // https://ai.google.dev/edge/litert/android/metadata/lite_support?hl=ko
-//        noCompress += "tflite"
-    }
 }
 
 dependencies {
+    implementation(project(":aitracker"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -55,10 +51,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-
-    implementation(libs.tensorflow.lite)
-    implementation(libs.tensorflow.lite.support)
-
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.camera2)

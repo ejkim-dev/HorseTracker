@@ -8,12 +8,12 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.nativeCanvas
-import com.example.horsetracker.presentation.detector.BoundingBox
+import com.example.aitracker.api.DetectionBox
 
 @Composable
 fun BoundingBoxOverlay(
     modifier: Modifier = Modifier,
-    boundingBoxes: List<BoundingBox>
+    detectionBox: List<DetectionBox>
 ) {
     Canvas(modifier = modifier) {
         val boxPaint = Paint().apply {
@@ -30,19 +30,19 @@ fun BoundingBoxOverlay(
 
         val bounds = Rect()
 
-        boundingBoxes.forEach { box ->
-            val left = box.x1 * size.width
-            val top = box.y1 * size.height
-            val right = box.x2 * size.width
-            val bottom = box.y2 * size.height
+        detectionBox.forEach { box ->
+            val left = box.left * size.width
+            val top = box.top * size.height
+            val right = box.right * size.width
+            val bottom = box.bottom * size.height
 
             drawContext.canvas.nativeCanvas.drawRect(left, top, right, bottom, boxPaint)
 
-            textPaint.getTextBounds(box.clsName, 0, box.clsName.length, bounds)
+            textPaint.getTextBounds(box.label, 0, box.label.length, bounds)
             val textHeight = bounds.height().toFloat()
 
             drawContext.canvas.nativeCanvas.drawText(
-                box.clsName,
+                box.label,
                 left,
                 bottom + textHeight,
                 textPaint
