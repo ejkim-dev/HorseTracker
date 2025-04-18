@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.ui.camera
+package com.example.horsetracker.presentation.feature.camera
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -19,9 +19,10 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.aitracker.api.DetectionBox
-import com.example.horsetracker.presentation.ui.camera.uistate.CameraState
-import com.example.horsetracker.presentation.ui.component.BoundingBoxOverlay
-import com.example.horsetracker.presentation.ui.component.RequestPermissions
+import com.example.horsetracker.presentation.feature.uistate.CameraState
+import com.example.horsetracker.presentation.component.BoundingBoxOverlay
+import com.example.horsetracker.presentation.component.RequestPermissions
+import com.example.horsetracker.presentation.util.CameraController
 import kotlinx.coroutines.launch
 
 @Composable

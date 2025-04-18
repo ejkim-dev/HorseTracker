@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.ui.camera.uistate
+package com.example.horsetracker.presentation.feature.uistate
 
 sealed class CameraState{
     object PermissionDenied : CameraState()

@@ -1,10 +1,11 @@
-package com.example.horsetracker.presentation.ui.camera
+package com.example.horsetracker.presentation.feature.camera
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.aitracker.api.DetectionBox
-import com.example.horsetracker.presentation.ui.camera.uistate.CameraState
+import com.example.horsetracker.presentation.feature.uistate.CameraState
+import com.example.horsetracker.presentation.util.CameraController
 
 class CameraViewModel: ViewModel() {
     private val _cameraState = mutableStateOf<CameraState>(CameraState.PermissionDenied)

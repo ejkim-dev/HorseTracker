@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.ui.component
+package com.example.horsetracker.presentation.component
 
 import android.graphics.Color
 import android.graphics.Paint

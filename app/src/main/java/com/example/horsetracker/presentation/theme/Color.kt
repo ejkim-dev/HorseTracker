@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.ui.theme
+package com.example.horsetracker.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

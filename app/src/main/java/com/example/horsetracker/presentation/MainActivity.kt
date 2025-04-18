@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.ui
+package com.example.horsetracker.presentation
 
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -10,11 +10,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.aitracker.api.DetectionBox
 import com.example.aitracker.api.Detector
 import com.example.aitracker.api.DetectorFactory
-import com.example.horsetracker.presentation.ui.camera.CameraController
-import com.example.horsetracker.presentation.ui.camera.CameraPermissionCheckSnackbar
-import com.example.horsetracker.presentation.ui.camera.CameraViewModel
-import com.example.horsetracker.presentation.ui.camera.CameraXController
-import com.example.horsetracker.presentation.ui.theme.HorseTrackerTheme
+import com.example.horsetracker.presentation.util.CameraController
+import com.example.horsetracker.presentation.feature.camera.CameraPermissionCheckSnackbar
+import com.example.horsetracker.presentation.feature.camera.CameraViewModel
+import com.example.horsetracker.presentation.util.CameraXController
+import com.example.horsetracker.presentation.theme.HorseTrackerTheme
 
 class MainActivity : ComponentActivity(), Detector.DetectionListener,
     CameraController.CameraFrameProcessor {
@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity(), Detector.DetectionListener,
         horseDetector.detect(frame)
     }
 
-    override fun onError(exception: Exception) {
+    override fun processError(exception: Exception) {
         cameraViewModel.updateBoundingBoxes(emptyList())
     }
 }
