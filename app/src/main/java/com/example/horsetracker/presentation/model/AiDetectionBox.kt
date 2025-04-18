@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.feature.model
+package com.example.horsetracker.presentation.model
 
 data class AiDetectionBox(
     val id: Int,

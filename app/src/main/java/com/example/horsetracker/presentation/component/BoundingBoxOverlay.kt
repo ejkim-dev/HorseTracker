@@ -8,7 +8,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.nativeCanvas
-import com.example.horsetracker.presentation.feature.model.AiDetectionBox
+import com.example.horsetracker.presentation.model.AiDetectionBox
 
 @Composable
 fun BoundingBoxOverlay(

@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.feature.camera
+package com.example.horsetracker.presentation.camera
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -8,11 +8,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.horsetracker.domain.usecase.DetectObjectsUseCase
-import com.example.horsetracker.presentation.feature.model.AiDetectionBox
-import com.example.horsetracker.presentation.feature.model.CameraState
-import com.example.horsetracker.presentation.feature.model.toUiState
-import com.example.horsetracker.presentation.util.CameraController
-import com.example.horsetracker.presentation.util.CameraXController
+import com.example.horsetracker.presentation.model.AiDetectionBox
+import com.example.horsetracker.presentation.model.CameraState
+import com.example.horsetracker.presentation.model.toUiState
+import com.example.horsetracker.presentation.camera.util.CameraController
+import com.example.horsetracker.presentation.camera.util.CameraXController
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach

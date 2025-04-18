@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.horsetracker.data.repository.DetectorRepositoryImpl
 import com.example.horsetracker.domain.repository.DetectorRepository
 import com.example.horsetracker.domain.usecase.DetectObjectsUseCase
-import com.example.horsetracker.presentation.feature.camera.CameraViewModel
+import com.example.horsetracker.presentation.camera.CameraViewModel
 
 object ServiceLocator {
     private var detectorRepository: DetectorRepository? = null

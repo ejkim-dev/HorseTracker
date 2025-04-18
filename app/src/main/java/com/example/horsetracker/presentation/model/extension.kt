@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.feature.model
+package com.example.horsetracker.presentation.model
 
 import com.example.horsetracker.domain.model.DetectionObject
 

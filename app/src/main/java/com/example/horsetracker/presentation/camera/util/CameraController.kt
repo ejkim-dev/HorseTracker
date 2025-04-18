@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.util
+package com.example.horsetracker.presentation.camera.util
 
 import android.graphics.Bitmap
 import androidx.camera.view.PreviewView
