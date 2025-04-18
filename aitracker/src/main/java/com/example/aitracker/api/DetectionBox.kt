@@ -8,5 +8,6 @@ data class DetectionBox(
     val top: Float,       // 왼쪽 상단 y 좌표 (0-1)
     val right: Float,     // 오른쪽 하단 x 좌표 (0-1)
     val bottom: Float,    // 오른쪽 하단 y 좌표 (0-1)
-    val label: String    // 객체 라벨
+    val label: String,    // 객체 라벨
+    val confidence: Float // 신뢰도 (0-1)
 )

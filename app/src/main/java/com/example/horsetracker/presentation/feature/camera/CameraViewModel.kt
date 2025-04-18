@@ -6,14 +6,20 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
-import com.example.aitracker.api.DetectionBox
-import com.example.aitracker.api.Detector
-import com.example.aitracker.api.DetectorFactory
-import com.example.horsetracker.presentation.feature.uistate.CameraState
+import androidx.lifecycle.viewModelScope
+import com.example.horsetracker.domain.usecase.DetectObjectsUseCase
+import com.example.horsetracker.presentation.feature.model.AiDetectionBox
+import com.example.horsetracker.presentation.feature.model.CameraState
+import com.example.horsetracker.presentation.feature.model.toUiState
 import com.example.horsetracker.presentation.util.CameraController
 import com.example.horsetracker.presentation.util.CameraXController
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 
-class CameraViewModel: ViewModel(), Detector.DetectionListener, CameraController.CameraFrameProcessor  {
+class CameraViewModel(
+    private val detectObjectsUseCase: DetectObjectsUseCase
+): ViewModel(), CameraController.CameraFrameProcessor  {
     private val _cameraState = mutableStateOf<CameraState>(CameraState.PermissionDenied)
     val cameraState: State<CameraState> = _cameraState
 
@@ -21,33 +27,25 @@ class CameraViewModel: ViewModel(), Detector.DetectionListener, CameraController
     val cameraController: CameraController
         get() = _cameraController ?: throw IllegalStateException("Camera not initialized")
 
-    private val _boundingBoxes = mutableStateOf<List<DetectionBox>>(emptyList())
-    val boundingBoxes: State<List<DetectionBox>> = _boundingBoxes
+    private val _boundingBoxes = mutableStateOf<List<AiDetectionBox>>(emptyList())
+    val boundingBoxes: State<List<AiDetectionBox>> = _boundingBoxes
 
-    private lateinit var horseDetector: Detector
+    init {
+        // 탐지 결과 수신 및 UI 모델로 변환
+        detectObjectsUseCase.getDetectionResults()
+            .map { detections -> detections.map { it.toUiState() } }
+            .onEach { boxes -> _boundingBoxes.value = boxes }
+            .launchIn(viewModelScope)
+    }
 
     override fun onCleared() {
         super.onCleared()
         _cameraController?.shutdown()
-        if (::horseDetector.isInitialized) {
-            horseDetector.clear()
-        }
-    }
-
-    override fun detectionResult(results: List<DetectionBox>) {
-        updateBoundingBoxes(results)
-    }
-
-    override fun emptyDetection() {
-        updateBoundingBoxes(emptyList())
-    }
-
-    override fun detectionError(e: Exception) {
-        updateBoundingBoxes(emptyList())
+        detectObjectsUseCase.release()
     }
 
     override fun processFrame(frame: Bitmap) {
-        horseDetector.detect(frame)
+        detectObjectsUseCase.detectObjects(frame)
     }
 
     override fun processError(exception: Exception) {
@@ -57,11 +55,7 @@ class CameraViewModel: ViewModel(), Detector.DetectionListener, CameraController
     // 카메라와 Detector 설정
     fun initialize(context: Context, lifecycleOwner: LifecycleOwner) {
         // Detector 초기화
-        horseDetector = DetectorFactory.createHorseDetector(
-            context = context,
-            listener = this
-        )
-        horseDetector.setup()
+        detectObjectsUseCase.setup()
 
         // CameraController 초기화
         initCameraController(
@@ -91,7 +85,7 @@ class CameraViewModel: ViewModel(), Detector.DetectionListener, CameraController
         }
     }
 
-    private fun updateBoundingBoxes(newBoxes: List<DetectionBox>) {
+    private fun updateBoundingBoxes(newBoxes: List<AiDetectionBox>) {
         _boundingBoxes.value = newBoxes
     }
 }
