@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.ui.camera
+package com.example.horsetracker.presentation.camera.util
 
 import android.graphics.Bitmap
 import androidx.camera.view.PreviewView
@@ -10,6 +10,6 @@ interface CameraController {
 
     interface CameraFrameProcessor {
         fun processFrame(frame: Bitmap)
-        fun onError(exception: Exception)
+        fun processError(exception: Exception)
     }
 }

@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.ui.camera
+package com.example.horsetracker.presentation.camera
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -18,16 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.viewinterop.AndroidView
-import com.example.aitracker.api.DetectionBox
-import com.example.horsetracker.presentation.ui.camera.uistate.CameraState
-import com.example.horsetracker.presentation.ui.component.BoundingBoxOverlay
-import com.example.horsetracker.presentation.ui.component.RequestPermissions
+import com.example.horsetracker.presentation.model.CameraState
+import com.example.horsetracker.presentation.component.BoundingBoxOverlay
+import com.example.horsetracker.presentation.component.RequestPermissions
+import com.example.horsetracker.presentation.model.AiDetectionBox
+import com.example.horsetracker.presentation.camera.util.CameraController
 import kotlinx.coroutines.launch
 
 @Composable
 fun AiCameraScreen(
     controller: CameraController,
-    detectionBoxes: List<DetectionBox>
+    detectionBoxes: List<AiDetectionBox>
 ) {
     Box(
         modifier = Modifier

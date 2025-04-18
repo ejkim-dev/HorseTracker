@@ -21,7 +21,8 @@ internal data class BoundingBox(
             top = y1,
             right = x2,
             bottom = y2,
-            label = clsName
+            label = clsName,
+            confidence = cnf
         )
     }
 }

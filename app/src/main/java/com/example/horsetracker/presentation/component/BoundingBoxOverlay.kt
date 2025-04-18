@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.ui.component
+package com.example.horsetracker.presentation.component
 
 import android.graphics.Color
 import android.graphics.Paint
@@ -8,12 +8,12 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.nativeCanvas
-import com.example.aitracker.api.DetectionBox
+import com.example.horsetracker.presentation.model.AiDetectionBox
 
 @Composable
 fun BoundingBoxOverlay(
     modifier: Modifier = Modifier,
-    detectionBox: List<DetectionBox>
+    detectionBox: List<AiDetectionBox>
 ) {
     Canvas(modifier = modifier) {
         val boxPaint = Paint().apply {
@@ -42,7 +42,7 @@ fun BoundingBoxOverlay(
             val textHeight = bounds.height().toFloat()
 
             drawContext.canvas.nativeCanvas.drawText(
-                box.label,
+                "${box.label} (${(box.confidence * 100).toInt()}%)", // ui에서 정확도 확인을 위함
                 left,
                 bottom + textHeight,
                 textPaint

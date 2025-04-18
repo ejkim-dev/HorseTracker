@@ -1,4 +1,4 @@
-package com.example.horsetracker.presentation.ui.camera
+package com.example.horsetracker.presentation.camera.util
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -69,7 +69,7 @@ class CameraXController(
             provider.unbindAll()
             provider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, imageAnalyzer)
         } catch (e: Exception) {
-            cameraFrameProcessor.onError(e)
+            cameraFrameProcessor.processError(e)
         }
     }
 
