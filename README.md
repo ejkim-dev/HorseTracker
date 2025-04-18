@@ -44,4 +44,4 @@ com.example.aitracker        # TensorFlow Lite를 기반으로 한 객체 탐지
 ```
 
 ## Demo 영상
-<img src="https://github.com/ejkim-dev/HorseTracker/blob/main/demo/demo.gif" width="25%">
+<img src="https://github.com/ejkim-dev/HorseTracker/blob/main/demo/demo.gif" width="70%">
