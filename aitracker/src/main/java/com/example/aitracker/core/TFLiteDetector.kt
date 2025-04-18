@@ -14,11 +14,12 @@ import com.example.aitracker.api.Detector
 import java.nio.ByteBuffer
 
 internal class TFLiteDetector(
-    private val context: Context,
-    private val modelPath: String,
-    private val labels: List<String>,
-    private val listener: Detector.DetectionListener
+    context: Context,
+    listener: Detector.DetectionListener?,
+    modelPath: String,
+    private val labels: List<String>
 ): Detector {
+    private var detectorListener: Detector.DetectionListener?
     private var interpreter: Interpreter? = null
     private var tracked: BoundingBox? = null
     private var tensorWidth = 0
@@ -31,11 +32,15 @@ internal class TFLiteDetector(
         .add(CastOp(INPUT_TYPE))
         .build()
 
-    override fun setup() {
+    init {
         val model = FileUtil.loadMappedFile(context, modelPath)
         val options = Interpreter.Options().apply { numThreads = 4 }
         interpreter = Interpreter(model, options)
 
+        detectorListener = listener
+    }
+
+    override fun setup() {
         interpreter?.getInputTensor(0)?.shape()?.let {
             tensorWidth = it[1]; tensorHeight = it[2]
         }
@@ -56,17 +61,25 @@ internal class TFLiteDetector(
 
             if (boxes.isNullOrEmpty()) {
                 tracked = null
-                listener.emptyDetection()
+                detectorListener?.emptyDetection()
             } else {
                 tracked = track(boxes)
-                listener.detectionResult(listOfNotNull(tracked?.toDetectionBox()))
+                val results = listOfNotNull(tracked?.toDetectionBox())
+
+                if (results.isEmpty()) {
+                    detectorListener?.emptyDetection()
+                    return
+                }
+
+                detectorListener?.detectionResult(listOfNotNull(tracked?.toDetectionBox()))
             }
         } catch (e: Exception) {
-            listener.detectionError(e)
+            detectorListener?.detectionError(e)
         }
     }
 
     override fun clear() {
+        detectorListener = null
         interpreter?.close()
         interpreter = null
     }

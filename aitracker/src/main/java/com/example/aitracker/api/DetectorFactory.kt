@@ -6,10 +6,10 @@ import com.example.aitracker.core.TFLiteDetector
 object DetectorFactory {
     fun createHorseDetector(
         context: Context,
-        listener: Detector.DetectionListener
+        listener: Detector.DetectionListener?
     ): Detector {
         val modelPath = "best_float32.tflite"
         val labels = listOf("horse")
-        return TFLiteDetector(context, modelPath, labels, listener)
+        return TFLiteDetector(context, listener, modelPath, labels)
     }
 }
